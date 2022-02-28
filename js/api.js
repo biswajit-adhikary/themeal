@@ -1,4 +1,7 @@
 document.getElementById('button-search').addEventListener('click', function () {
+    toggleSpinner('block');
+    const mealDiv = document.getElementById('all-meal');
+    mealDiv.textContent = '';
     const searchInput = document.getElementById('form-search');
     const searchValue = searchInput.value;
     searchInput.value = '';
@@ -7,6 +10,7 @@ document.getElementById('button-search').addEventListener('click', function () {
         errorDiv.innerHTML = `
             <p class="text-danger">Please write meaningful keyword!</p>
         `;
+        toggleSpinner('none');
     }
     else {
         errorDiv.innerHTML = '';
@@ -26,6 +30,7 @@ const displayMeals = meals => {
         errorDiv.innerHTML = `
             <p class="text-danger">No result found! Please write meaningful keyword.</p>
         `;
+        toggleSpinner('none');
     }
     else {
         meals.forEach(meal => {
@@ -42,12 +47,15 @@ const displayMeals = meals => {
                 </div>
             `;
             mealDiv.appendChild(col);
-        })
+        });
+        toggleSpinner('none');
     }
 }
 
 const mealDetails = mealID => {
-    console.log(mealID);
+    const detailsDiv = document.getElementById('modal-body');
+    detailsDiv.textContent = '';
+    toggleSpinnerTwo('block');
     const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealID}`;
     fetch(URL)
         .then(res => res.json())
@@ -55,10 +63,20 @@ const mealDetails = mealID => {
 }
 
 const displayDetails = mealDetails => {
-    console.log(mealDetails);
+    toggleSpinnerTwo('none');
     const detailsDiv = document.getElementById('modal-body');
     detailsDiv.innerHTML = `
         <img src="${mealDetails.strMealThumb}" alt="" width="100%" height="auto">
         <p class="mt-3">${mealDetails.strInstructions}</p>
     `;
+}
+
+const toggleSpinner = style => {
+    const spinDiv = document.getElementById('spinner');
+    spinDiv.style.display = style;
+}
+
+const toggleSpinnerTwo = style => {
+    const spinDiv = document.getElementById('spinner-two');
+    spinDiv.style.display = style;
 }
